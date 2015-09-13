@@ -61,10 +61,15 @@ img {
 
     onChange(event) {
       let element = event.target;
+      let viewNode = this.domElementMap.get(element.parentElement)
       if (element.name == 'active') {
-        let viewNode = this.domElementMap.get(element.parentElement)
         if (viewNode) {
           viewNode.item.active = element.checked;
+        }
+      }
+      else if (element.name == 'time') {
+        if (viewNode) {
+          viewNode.item.time = Number.parseInt(element.value);
         }
       }
     }
@@ -100,7 +105,6 @@ img {
 
   ItemViewNode.Templates = class {
     static item(item) {
-      console.log(item);
       return [
         'div',
         {'class': 'item'},
@@ -112,6 +116,11 @@ img {
           'input',
           {'type': 'checkbox', 'name': 'active',
            'checked': item.active ? 'checked' : null},
+        ],
+        [
+          'input',
+          {'type': 'number', 'name': 'time',
+           'value': item.time.toString()},
         ],
         item.name,
       ];

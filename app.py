@@ -46,10 +46,10 @@ def update_data():
     if 'items' in data:
         for item_data in data['items']:
             item = item_manager.get(item_data.get('name'))
-            print (item)
             if 'active' in item_data:
                 item.active = bool(item_data['active'])
-                print(item, "active")
+            if 'time' in item_data:
+                item.time = int(item_data['time'])
     item_manager.save_to_disk()
     return 'updated'
 
