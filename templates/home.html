@@ -1,0 +1,76 @@
+<!doctype html>
+<meta charset=utf-8>
+<title>Simple signage viewer</title>
+<script src=/static/app.js></script>
+
+<style>
+body {
+  margin: 0;
+}
+.hidden {
+  opacity: 0;
+  transition: 1s opacity;
+  z-index: 10;
+}
+.item {
+  background: black;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+.item img {
+  height: 100%;
+  object-fit: contain;
+  position: absolute;
+  width: 100%;
+}
+</style>
+
+<div id=viewer></div>
+
+<script>
+  'use strict';
+
+  class Viewer {
+    constructor() {
+      this.itemManager = new ItemManager();
+      this.container_ = document.querySelector('#viewer');
+      this.lastRenderedItem_ = null;
+
+      this.renderBound_ = this.render.bind(this);
+
+      this.itemManager.updateData()
+        .then(this.renderBound_);
+    }
+
+    render() {
+      let newItem = this.itemManager.nextItem(this.lastRenderedItem_);
+      let tmpl;
+      if (newItem) {
+        tmpl = [
+          'div',
+          {'class': 'item'},
+          ['img', {src: newItem.url}],
+        ];
+      } else {
+        tmpl = ['div', {'class': 'item'}];
+      }
+      Array.from(this.container_.querySelectorAll('.item')).forEach(element => {
+        element.classList.add('hidden');
+        element.addEventListener('transitionend', e => {
+          if (element.parentElement)
+            element.parentElement.removeChild(element);
+        });
+      });
+      this.container_.appendChild(createTemplate(tmpl));
+
+      let waitMs = newItem.time;
+      this.lastRenderedItem_ = newItem;
+      setTimeout(_ => this.itemManager.updateData(), 10);
+      setTimeout(this.renderBound_, waitMs);
+    }
+  }
+
+  window.viewer = new Viewer();
+
+</script>
