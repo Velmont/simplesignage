@@ -41,3 +41,10 @@ might want to open the admin page:
 And on the remote machines (or another tab), you should open the viewer or client:
 
     http://<your_ip>:5000/
+
+
+License
+-------
+
+MIT licensed.
+Written by Odin Hørthe Omdal.
