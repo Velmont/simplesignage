@@ -39,7 +39,7 @@ img {
       this.view = new View(container, this.itemManager);
 
       this.readyPromise_ = this.itemManager.updateData()
-        .then(_ => this.view.render());
+        .then(this.view.render.bind(this.view));
     }
 
     ready() {
@@ -80,11 +80,12 @@ img {
         this.viewNodeMap.set(item, viewNode);
       }
       this.container_.textContent = '';
+      let self = this;
       Array.from(this.viewNodeMap.values())
-        .forEach(viewNode => {
+        .forEach(function(viewNode) {
           let element = viewNode.getElement();
-          this.container_.appendChild(element);
-          this.domElementMap.set(element, viewNode);
+          self.container_.appendChild(element);
+          self.domElementMap.set(element, viewNode);
         });
     }
   }

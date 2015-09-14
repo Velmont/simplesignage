@@ -1,5 +1,6 @@
 import os
 import json
+import datetime
 
 from flask import Flask
 from flask import render_template
@@ -14,6 +15,7 @@ app = Flask(__name__)
 app.config['UPLOADED_FILES_DEST'] = '%s/uploads' % os.getcwd()
 files = uploads.UploadSet('files')
 uploads.configure_uploads(app, [files])
+start_time = datetime.datetime.now()
 
 item_manager = ItemManager()
 
@@ -75,7 +77,10 @@ def uploaded_files(name):
 def data():
     #files = os.listdir(app.config['UPLOADED_FILES_DEST'])
     #data = [{'name': k, 'url': '/uploads/%s' % k} for k in files]
-    return json.dumps([item.to_data_dict() for item in item_manager.items.values()])
+    return json.dumps({
+        'time': datetime.datetime.now().isoformat(),
+        'items': [item.to_data_dict() for item in item_manager.items.values()],
+    })
 
 
 if __name__ == '__main__':

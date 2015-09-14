@@ -55,18 +55,18 @@ body {
       } else {
         tmpl = ['div', {'class': 'item'}];
       }
-      Array.from(this.container_.querySelectorAll('.item')).forEach(element => {
+      Array.from(this.container_.querySelectorAll('.item')).forEach(function(element) {
         element.classList.add('hidden');
-        element.addEventListener('transitionend', e => {
+        element.addEventListener('transitionend', function(e) {
           if (element.parentElement)
             element.parentElement.removeChild(element);
         });
       });
       this.container_.appendChild(createTemplate(tmpl));
 
-      let waitMs = newItem.time;
+      let waitMs = newItem ? newItem.time : 1000;
       this.lastRenderedItem_ = newItem;
-      setTimeout(_ => this.itemManager.updateData(), 10);
+      setTimeout(this.itemManager.updateData.bind(this.itemManager), 10);
       setTimeout(this.renderBound_, waitMs);
     }
   }
